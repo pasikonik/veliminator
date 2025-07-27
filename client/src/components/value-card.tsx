@@ -74,7 +74,7 @@ export function ValueCard({
         isFocused && "ring-2 ring-primary ring-offset-1",
         "hover:shadow-sm hover:-translate-y-0.5"
       )}
-      tabIndex={0}
+      tabIndex={-1}
       onFocus={onFocus}
       onKeyDown={handleKeyDown}
       onClick={isUnsorted ? onAddToSorted : undefined}
@@ -110,6 +110,7 @@ export function ValueCard({
       {!isUnsorted && (
         <div className="flex items-center space-x-1">
           <Button
+            tabIndex={-1}
             size="sm"
             variant="ghost"
             className={`h-auto text-slate-400 hover:text-primary ${isMobile ? 'p-1' : 'p-0.5'}`}
@@ -122,6 +123,7 @@ export function ValueCard({
             <ChevronLeft className={isMobile ? "w-4 h-4" : "w-3 h-3"} />
           </Button>
           <Button
+            tabIndex={-1}
             size="sm"
             variant="ghost"
             className={`h-auto text-slate-400 hover:text-primary ${isMobile ? 'p-1' : 'p-0.5'}`}

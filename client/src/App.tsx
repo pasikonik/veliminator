@@ -23,9 +23,10 @@ export default function App() {
   const handleMoveLeft = useCallback((index: number) => {
     if (index > 0) {
       moveValue(index, index - 1);
+      setFocusedIndex(prev => (prev || 0) - 1);
       const value = sortedValues[index];
       if (value) {
-        setSelectedValue(`Przesunięto ${value.name} w górę`);
+        setSelectedValue(`Przesunięto ${value.name} w górę na pozycje ${index}`);
       }
     }
   }, [moveValue, sortedValues]);
@@ -33,9 +34,10 @@ export default function App() {
   const handleMoveRight = useCallback((index: number) => {
     if (index < sortedValues.length - 1) {
       moveValue(index, index + 1);
+      setFocusedIndex(prev => (prev || 0) + 1);
       const value = sortedValues[index];
       if (value) {
-        setSelectedValue(`Przesunięto ${value.name} w dół`);
+        setSelectedValue(`Przesunięto ${value.name} w dół na pozycje ${index}`);
       }
     }
   }, [moveValue, sortedValues]);
@@ -109,10 +111,13 @@ export default function App() {
       <Header values={values} lastSaved={lastSaved} onImportCSV={importFromCSV} />
       
       <main className="max-w-6xl mx-auto px-4 py-4">
-        <div className="grid grid-cols-12 gap-4">
-          <InstructionsPanel sortedValues={sortedValues} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* InstructionsPanel - hidden on mobile, visible on large screens */}
+          <div className="hidden lg:block lg:col-span-4">
+            <InstructionsPanel sortedValues={sortedValues} />
+          </div>
           
-          <div className="col-span-9">
+          <div className="lg:col-span-8">
             <div className="bg-white rounded-lg shadow-sm border border-slate-200">
               <div className="p-3 border-b border-slate-200">
                 <div className="flex items-center justify-between">
@@ -174,7 +179,8 @@ export default function App() {
                         </span>
                       </h3>
                       
-                      <div className="grid grid-cols-4 gap-1">
+                      {/* Mobile: 2 columns, Desktop: 4 columns */}
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
                         {unsortedValues.map((value) => (
                           <ValueCard
                             key={value.id}
