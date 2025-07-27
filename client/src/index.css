@@ -95,4 +95,31 @@
     ring: 2px solid hsl(207, 90%, 54%);
     outline: none;
   }
+
+  /* Touch-friendly styles for mobile */
+  @media (max-width: 768px) {
+    .value-card {
+      @apply min-h-[44px]; /* iOS recommended minimum touch target */
+    }
+    
+    .value-card button {
+      @apply min-w-[44px] min-h-[44px]; /* Touch-friendly buttons */
+    }
+    
+    /* Improve drag handle visibility on mobile */
+    .drag-handle {
+      @apply opacity-80;
+    }
+    
+    /* Better hover states for touch devices */
+    .value-card:active {
+      @apply scale-95 shadow-md;
+    }
+    
+    /* Reduce animations on mobile for performance */
+    .value-card:hover {
+      transform: none;
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+    }
+  }
 }

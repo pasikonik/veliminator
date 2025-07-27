@@ -2,6 +2,7 @@ import { LifeValue } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { GripVertical, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ValueCardProps {
   value: LifeValue;
@@ -35,6 +36,7 @@ export function ValueCard({
   onDrop,
 }: ValueCardProps) {
   const position = value.position;
+  const isMobile = useIsMobile();
 
   const getCardStyles = () => {
     if (isUnsorted) {
@@ -66,7 +68,8 @@ export function ValueCard({
   return (
     <div
       className={cn(
-        "value-card rounded-md p-2 flex items-center space-x-2 cursor-pointer transition-all duration-200",
+        "value-card rounded-md flex items-center cursor-pointer transition-all duration-200",
+        isMobile ? "p-2 space-x-1" : "p-2 space-x-2",
         getCardStyles(),
         isFocused && "ring-2 ring-primary ring-offset-1",
         "hover:shadow-sm hover:-translate-y-0.5"
@@ -82,12 +85,13 @@ export function ValueCard({
       onDrop={onDrop}
     >
       <div className="drag-handle text-slate-400 hover:text-slate-600 cursor-grab active:cursor-grabbing">
-        <GripVertical className="w-4 h-4" />
+        <GripVertical className={isMobile ? "w-3 h-3" : "w-4 h-4"} />
       </div>
       
       {!isUnsorted && position && (
         <div className={cn(
-          "flex-shrink-0 w-5 h-5 text-white rounded-full flex items-center justify-center font-semibold text-xs",
+          "flex-shrink-0 text-white rounded-full flex items-center justify-center font-semibold",
+          isMobile ? "w-4 h-4 text-xs" : "w-5 h-5 text-xs",
           getPositionStyles()
         )}>
           {position}
@@ -95,8 +99,10 @@ export function ValueCard({
       )}
       
       <div className="flex-1 min-w-0">
-        <h3 className="font-medium text-slate-800 text-xs truncate">{value.name}</h3>
-        {value.description && !isUnsorted && position && position <= 7 && (
+        <h3 className={`font-medium text-slate-800 truncate ${isMobile ? 'text-xs' : 'text-xs'}`}>
+          {value.name}
+        </h3>
+        {value.description && !isUnsorted && position && position <= 7 && !isMobile && (
           <p className="text-xs text-slate-600 truncate">{value.description}</p>
         )}
       </div>
@@ -106,26 +112,26 @@ export function ValueCard({
           <Button
             size="sm"
             variant="ghost"
-            className="p-0.5 h-auto text-slate-400 hover:text-primary"
+            className={`h-auto text-slate-400 hover:text-primary ${isMobile ? 'p-1' : 'p-0.5'}`}
             onClick={(e) => {
               e.stopPropagation();
               onMoveLeft?.();
             }}
             title="Przesuń w górę (Strzałka w lewo)"
           >
-            <ChevronLeft className="w-3 h-3" />
+            <ChevronLeft className={isMobile ? "w-4 h-4" : "w-3 h-3"} />
           </Button>
           <Button
             size="sm"
             variant="ghost"
-            className="p-0.5 h-auto text-slate-400 hover:text-primary"
+            className={`h-auto text-slate-400 hover:text-primary ${isMobile ? 'p-1' : 'p-0.5'}`}
             onClick={(e) => {
               e.stopPropagation();
               onMoveRight?.();
             }}
             title="Przesuń w dół (Strzałka w prawo)"
           >
-            <ChevronRight className="w-3 h-3" />
+            <ChevronRight className={isMobile ? "w-4 h-4" : "w-3 h-3"} />
           </Button>
         </div>
       )}

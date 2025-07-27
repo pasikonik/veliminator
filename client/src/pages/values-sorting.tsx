@@ -6,8 +6,10 @@ import { InstructionsPanel } from "@/components/instructions-panel";
 import { ValueCard } from "@/components/value-card";
 import { useValues } from "@/hooks/use-values";
 import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function ValuesSorting() {
+  const isMobile = useIsMobile();
   const {
     values,
     sortedValues,
@@ -108,22 +110,22 @@ export default function ValuesSorting() {
     <div className="bg-slate-50 min-h-screen">
       <Header values={values} lastSaved={lastSaved} onImportCSV={importFromCSV} />
       
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-12 gap-8">
-          <InstructionsPanel sortedValues={sortedValues} />
+      <main className={`max-w-7xl mx-auto ${isMobile ? 'px-3 py-4' : 'px-6 py-8'}`}>
+        <div className={`${isMobile ? 'space-y-4' : 'grid grid-cols-12 gap-8'}`}>
+          {!isMobile && <InstructionsPanel sortedValues={sortedValues} />}
           
-          <div className="col-span-9">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-              <div className="p-6 border-b border-slate-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-slate-800">Lista Wartości</h2>
-                    <p className="text-sm text-slate-600 mt-1">
-                      Przeciągnij wartości aby ustawić ich ważność w Twoim życiu
+          <div className={isMobile ? '' : 'col-span-9'}>
+            <div className={`bg-white ${isMobile ? 'rounded-lg' : 'rounded-xl'} shadow-sm border border-slate-200`}>
+              <div className={`${isMobile ? 'p-4' : 'p-6'} border-b border-slate-200`}>
+                <div className={`flex items-center ${isMobile ? 'flex-col space-y-3' : 'justify-between'}`}>
+                  <div className={isMobile ? 'text-center' : ''}>
+                    <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-slate-800`}>Lista Wartości</h2>
+                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-slate-600 mt-1`}>
+                      {isMobile ? 'Dotknij i przeciągnij lub użyj przycisków' : 'Przeciągnij wartości aby ustawić ich ważność w Twoim życiu'}
                     </p>
                   </div>
                   
-                  <div className="flex items-center space-x-4">
+                  <div className={`flex items-center ${isMobile ? 'flex-col space-y-2' : 'space-x-4'}`}>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -134,16 +136,18 @@ export default function ValuesSorting() {
                       Resetuj kolejność
                     </Button>
                     
-                    <div className="text-sm text-slate-600 flex items-center">
-                      <Info className="w-4 h-4 mr-1" />
-                      <span>{selectedValue}</span>
-                    </div>
+                    {!isMobile && (
+                      <div className="text-sm text-slate-600 flex items-center">
+                        <Info className="w-4 h-4 mr-1" />
+                        <span>{selectedValue}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
               
-              <div className="p-6">
-                <div className="space-y-2">
+              <div className={isMobile ? 'p-4' : 'p-6'}>
+                <div className={isMobile ? 'space-y-1' : 'space-y-2'}>
                   {sortedValues.map((value, index) => (
                     <ValueCard
                       key={value.id}
@@ -168,16 +172,16 @@ export default function ValuesSorting() {
                   ))}
                   
                   {unsortedValues.length > 0 && (
-                    <div className="border-t border-slate-200 pt-6 mt-6">
-                      <h3 className="text-lg font-medium text-slate-800 mb-4 flex items-center">
-                        <List className="w-5 h-5 text-slate-400 mr-2" />
+                    <div className={`border-t border-slate-200 ${isMobile ? 'pt-4 mt-4' : 'pt-6 mt-6'}`}>
+                      <h3 className={`${isMobile ? 'text-base' : 'text-lg'} font-medium text-slate-800 mb-4 flex items-center`}>
+                        <List className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-slate-400 mr-2`} />
                         Wartości do posortowania
-                        <span className="ml-2 px-2 py-1 bg-slate-100 text-slate-600 text-sm rounded-full">
+                        <span className={`ml-2 px-2 py-1 bg-slate-100 text-slate-600 ${isMobile ? 'text-xs' : 'text-sm'} rounded-full`}>
                           {unsortedValues.length}
                         </span>
                       </h3>
                       
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className={`grid ${isMobile ? 'grid-cols-2 gap-1' : 'grid-cols-4 gap-2'}`}>
                         {unsortedValues.map((value) => (
                           <ValueCard
                             key={value.id}
@@ -196,6 +200,21 @@ export default function ValuesSorting() {
               </div>
             </div>
           </div>
+          
+          {isMobile && (
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+              <h3 className="text-sm font-semibold text-slate-800 mb-3">Instrukcje mobilne</h3>
+              <div className="space-y-2 text-xs text-slate-600">
+                <p>• Dotknij wartość i przeciągnij aby zmienić kolejność</p>
+                <p>• Użyj przycisków ← → aby przesunąć wybraną wartość</p>
+                <p>• Dotknij wartość nieposortowaną aby dodać do listy</p>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                  <span>Posortowane:</span>
+                  <span className="font-semibold text-primary">{sortedValues.length}/40</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

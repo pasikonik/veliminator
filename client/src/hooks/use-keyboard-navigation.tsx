@@ -44,10 +44,18 @@ export function useKeyboardNavigation({
       case "ArrowLeft":
         event.preventDefault();
         onMoveLeft(focusedIndex);
+        // Przesuń focus w górę (wartość poszła wyżej)
+        if (focusedIndex > 0) {
+          setFocusedIndex(focusedIndex - 1);
+        }
         break;
       case "ArrowRight":
         event.preventDefault();
         onMoveRight(focusedIndex);
+        // Przesuń focus w dół (wartość poszła niżej)
+        if (focusedIndex < itemCount - 1) {
+          setFocusedIndex(focusedIndex + 1);
+        }
         break;
       case "Enter":
       case " ":
@@ -59,6 +67,9 @@ export function useKeyboardNavigation({
         event.preventDefault();
         if (onDelete) {
           onDelete(focusedIndex);
+          // Po usunięciu, ustaw focus na poprzedni element lub na null jeśli lista jest pusta
+          const newFocusIndex = focusedIndex > 0 ? focusedIndex - 1 : (itemCount > 1 ? 0 : null);
+          setFocusedIndex(newFocusIndex);
         }
         break;
       case "Escape":

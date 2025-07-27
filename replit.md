@@ -13,6 +13,8 @@ This is a full-stack life values sorting application built with a React frontend
 - Compact header and instructions panel for maximum screen utilization
 - Added tooltips to movement buttons for better UX
 - Updated instructions panel to reflect new keyboard controls
+- **Added comprehensive mobile support**: responsive layouts, touch-friendly buttons, mobile-specific instructions
+- Optimized interface for mobile devices with larger touch targets and simplified navigation
 
 ## User Preferences
 

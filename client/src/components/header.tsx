@@ -5,6 +5,7 @@ import { exportToCSV, importFromCSV } from "@/lib/csv-utils";
 import { LifeValue, CsvExportRow } from "@shared/schema";
 import { Download, Upload, Check, SortAsc } from "lucide-react";
 import { useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface HeaderProps {
   values: LifeValue[];
@@ -15,6 +16,7 @@ interface HeaderProps {
 export function Header({ values, lastSaved, onImportCSV }: HeaderProps) {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const handleExportCSV = () => {
     try {
@@ -61,41 +63,43 @@ export function Header({ values, lastSaved, onImportCSV }: HeaderProps) {
 
   return (
     <header className="bg-white shadow-sm border-b border-slate-200">
-      <div className="max-w-6xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
+      <div className={`max-w-6xl mx-auto ${isMobile ? 'px-3 py-2' : 'px-4 py-3'}`}>
+        <div className={`flex items-center ${isMobile ? 'flex-col space-y-3' : 'justify-between'}`}>
           <div className="flex items-center space-x-3">
             <div className="bg-primary rounded-lg p-2">
-              <SortAsc className="text-white w-5 h-5" />
+              <SortAsc className={`text-white ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-800">Eliminacja Wartości</h1>
+              <h1 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-slate-800`}>Eliminacja Wartości</h1>
               <p className="text-xs text-slate-600">Sortuj swoje życiowe priorytety</p>
             </div>
           </div>
           
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 text-xs text-slate-600">
-              <Check className="w-3 h-3 text-accent" />
-              <span>Zapisano automatycznie</span>
-            </div>
+          <div className={`flex items-center ${isMobile ? 'space-x-2' : 'space-x-3'}`}>
+            {!isMobile && (
+              <div className="flex items-center space-x-2 text-xs text-slate-600">
+                <Check className="w-3 h-3 text-accent" />
+                <span>Zapisano automatycznie</span>
+              </div>
+            )}
             
             <Button 
               onClick={handleImportCSV}
               variant="outline"
-              size="sm"
-              className="flex items-center space-x-2"
+              size={isMobile ? "sm" : "sm"}
+              className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}
             >
               <Upload className="w-3 h-3" />
-              <span>Importuj CSV</span>
+              {!isMobile && <span>Importuj CSV</span>}
             </Button>
             
             <Button 
               onClick={handleExportCSV}
-              size="sm"
-              className="flex items-center space-x-2"
+              size={isMobile ? "sm" : "sm"}
+              className={`flex items-center ${isMobile ? 'space-x-1' : 'space-x-2'}`}
             >
               <Download className="w-3 h-3" />
-              <span>Eksportuj CSV</span>
+              {!isMobile && <span>Eksportuj CSV</span>}
             </Button>
 
             <Input
